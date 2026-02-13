@@ -19,7 +19,7 @@ function Signup() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard')
+      navigate('/home')
     }
   }, [isAuthenticated, navigate])
 
@@ -53,7 +53,7 @@ function Signup() {
     setLoading(false)
 
     if (result.success) {
-      navigate('/dashboard')
+      navigate('/home')
     } else {
       setError(result.error || 'Signup failed. Please try again.')
     }
