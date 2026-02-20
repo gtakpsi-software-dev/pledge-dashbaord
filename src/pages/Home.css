@@ -197,6 +197,33 @@
   color: var(--text-dark);
 }
 
+/* Error state */
+.home-error-card {
+  background: #fee2e2;
+  border: 1px solid #f87171;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+.home-error-card p {
+  color: #991b1b;
+  margin-bottom: 0.75rem;
+}
+
+.retry-btn {
+  padding: 0.5rem 1rem;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.retry-btn:hover {
+  background: #b91c1c;
+}
+
 /* Thank-you reminder */
 .thank-you-card {
   display: flex;

@@ -11,6 +11,7 @@ import './Home.css';
 function Home() {
   const { user, logout } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [stats, setStats] = useState(null);
   const [currentWeek, setCurrentWeek] = useState(null);
   const [allRequirements, setAllRequirements] = useState([]);
@@ -23,6 +24,7 @@ function Home() {
   const loadHomeData = async () => {
     try {
       setLoading(true);
+      setError(null);
       const [statsRes, currentRes, allRes, todosRes] = await Promise.all([
         oneOnOneAPI.getStats(),
         weeklyRequirementsAPI.getCurrent(),
@@ -34,8 +36,9 @@ function Home() {
       setCurrentWeek(currentRes.data.requirement);
       setAllRequirements(allRes.data.requirements || []);
       setTodos(todosRes.data.todos || []);
-    } catch (error) {
-      console.error('Error loading home data:', error);
+    } catch (err) {
+      console.error('Error loading home data:', err);
+      setError('Could not load your progress. Make sure the backend server is running on port 5001.');
     } finally {
       setLoading(false);
     }
@@ -109,6 +112,9 @@ function Home() {
     );
   }
 
+  // Progress bar width: ensure at least 2% when totalRequired > 0 so bar is visible at 0%
+  const progressBarWidth = totalRequired > 0 ? Math.max(2, Math.min(progressPercent, 100)) : 0;
+
   return (
     <div className="home-container">
       <nav className="home-nav">
@@ -168,6 +174,18 @@ function Home() {
           </section>
         )}
 
+        {/* Error message */}
+        {error && (
+          <section className="home-section">
+            <div className="home-error-card">
+              <p>{error}</p>
+              <button type="button" onClick={loadHomeData} className="retry-btn">
+                Try again
+              </button>
+            </div>
+          </section>
+        )}
+
         {/* Progress Summary */}
         <section className="home-section progress-section">
           <h3>Your Progress</h3>
@@ -175,7 +193,7 @@ function Home() {
             <div className="progress-bar-container">
               <div
                 className="progress-bar-fill"
-                style={{ width: `${Math.min(progressPercent, 100)}%` }}
+                style={{ width: `${progressBarWidth}%` }}
               />
             </div>
             <div className="progress-stats">
