@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import OneOnOneTracker from './pages/OneOnOneTracker'
 import AdminTodos from './pages/AdminTodos'
@@ -17,8 +18,16 @@ function App() {
       <Router>
         <div className="app">
           <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/login" element={<Login />} />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/signup" element={<Signup />} />
             <Route 
               path="/dashboard" 

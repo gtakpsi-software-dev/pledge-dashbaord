@@ -15,7 +15,7 @@ function Login() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard')
+      navigate('/home')
     }
   }, [isAuthenticated, navigate])
 
@@ -37,7 +37,7 @@ function Login() {
     setLoading(false)
 
     if (result.success) {
-      navigate('/dashboard')
+      navigate('/home')
     } else {
       setError(result.error || 'Login failed. Please try again.')
     }
