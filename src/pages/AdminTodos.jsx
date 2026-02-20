@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { todoAPI } from '../utils/api';
+import { todoAPI, authAPI } from '../utils/api';
 import './AdminTodos.css';
 
 function AdminTodos() {
@@ -10,6 +10,7 @@ function AdminTodos() {
   const [pledges, setPledges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [selectAllPledges, setSelectAllPledges] = useState(false);
   const [formData, setFormData] = useState({
     pledgeId: '',
     title: '',
@@ -26,19 +27,13 @@ function AdminTodos() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [todosRes] = await Promise.all([
+      const [todosRes, usersRes] = await Promise.all([
         todoAPI.getAllForAdmin(),
+        authAPI.getUsers({ role: 'pledge' })
       ]);
       
       setTodos(todosRes.data.todos);
-      
-      // Extract unique pledges from todos
-      const uniquePledges = todosRes.data.todos
-        .map(t => t.pledgeId)
-        .filter((pledge, index, self) => 
-          pledge && index === self.findIndex(p => p && p._id === pledge._id)
-        );
-      setPledges(uniquePledges);
+      setPledges(usersRes.data.users || []);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -49,8 +44,24 @@ function AdminTodos() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await todoAPI.create(formData);
+      if (selectAllPledges) {
+        // Create todo for all pledges
+        const pledgeIds = pledges.map(p => p._id);
+        await todoAPI.createBulk({
+          pledgeIds,
+          title: formData.title,
+          description: formData.description,
+          dueDate: formData.dueDate,
+          priority: formData.priority,
+          category: formData.category
+        });
+      } else {
+        // Create todo for single pledge
+        await todoAPI.create(formData);
+      }
+      
       setShowAddModal(false);
+      setSelectAllPledges(false);
       setFormData({
         pledgeId: '',
         title: '',
@@ -160,20 +171,38 @@ function AdminTodos() {
             <h3>Add New Todo</h3>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label>Pledge</label>
-                <select
-                  value={formData.pledgeId}
-                  onChange={(e) => setFormData({...formData, pledgeId: e.target.value})}
-                  required
-                >
-                  <option value="">Select a pledge</option>
-                  {pledges.map(pledge => (
-                    <option key={pledge._id} value={pledge._id}>
-                      {pledge.firstName} {pledge.lastName}
-                    </option>
-                  ))}
-                </select>
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={selectAllPledges}
+                    onChange={(e) => {
+                      setSelectAllPledges(e.target.checked);
+                      if (e.target.checked) {
+                        setFormData({...formData, pledgeId: ''});
+                      }
+                    }}
+                  />
+                  <span>Select all pledges ({pledges.length})</span>
+                </label>
               </div>
+
+              {!selectAllPledges && (
+                <div className="form-group">
+                  <label>Pledge</label>
+                  <select
+                    value={formData.pledgeId}
+                    onChange={(e) => setFormData({...formData, pledgeId: e.target.value})}
+                    required
+                  >
+                    <option value="">Select a pledge</option>
+                    {pledges.map(pledge => (
+                      <option key={pledge._id} value={pledge._id}>
+                        {pledge.firstName} {pledge.lastName} ({pledge.pledgeClass})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <div className="form-group">
                 <label>Title</label>

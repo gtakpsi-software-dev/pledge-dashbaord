@@ -40,7 +40,8 @@ api.interceptors.response.use(
 export const authAPI = {
   login: (email, password) => api.post('/auth/login', { email, password }),
   signup: (userData) => api.post('/auth/signup', userData),
-  getCurrentUser: () => api.get('/auth/me')
+  getCurrentUser: () => api.get('/auth/me'),
+  getUsers: (params) => api.get('/auth/users', { params })
 };
 
 // Brother APIs
