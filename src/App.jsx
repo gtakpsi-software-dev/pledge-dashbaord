@@ -10,6 +10,7 @@ import OneOnOneTracker from './pages/OneOnOneTracker'
 import AdminTodos from './pages/AdminTodos'
 import AdminFeedback from './pages/AdminFeedback'
 import FeedbackCenter from './pages/FeedbackCenter'
+import Resources from './pages/Resources'
 import './App.css'
 
 function App() {
@@ -68,6 +69,14 @@ function App() {
                   <FeedbackCenter />
                 </ProtectedRoute>
               } 
+            />
+            <Route
+              path="/resources"
+              element={
+                <ProtectedRoute>
+                  <Resources />
+                </ProtectedRoute>
+              }
             />
           </Routes>
         </div>

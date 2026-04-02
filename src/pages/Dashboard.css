@@ -43,6 +43,23 @@
   flex-wrap: wrap;
 }
 
+.dashboard-nav-link {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--secondary-color);
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.dashboard-nav-link:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
 .user-name {
   font-weight: 600;
   color: var(--text-dark);
