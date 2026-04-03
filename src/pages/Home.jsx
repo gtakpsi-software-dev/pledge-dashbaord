@@ -6,6 +6,7 @@ import {
   weeklyRequirementsAPI,
   todoAPI,
 } from '../utils/api';
+import { UPCOMING_EVENTS } from '../data/upcomingEvents';
 import './Home.css';
 
 function Home() {
@@ -92,6 +93,15 @@ function Home() {
     .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
     .slice(0, 5);
 
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const upcomingEvents = UPCOMING_EVENTS.filter(
+    (e) => new Date(e.date) >= startOfToday
+  )
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 12);
+
   // Thank-you reminders: completed 1:1s without thank-you sent
   const thankYouNeeded = stats
     ? Math.max(
@@ -123,6 +133,9 @@ function Home() {
           <h1>Pledge Dashboard</h1>
         </div>
         <div className="nav-user">
+          <Link to="/resources" className="nav-link">
+            Resources
+          </Link>
           <Link to="/dashboard" className="nav-link">
             Full Dashboard
           </Link>
@@ -291,6 +304,54 @@ function Home() {
           </section>
         )}
 
+        {/* Upcoming events (manual list — edit src/data/upcomingEvents.js) */}
+        <section className="home-section events-section">
+          <h3>Upcoming events</h3>
+          <div className="events-card">
+            {upcomingEvents.length === 0 ? (
+              <p className="events-empty">
+                No upcoming events on the calendar right now. Check back soon or ask your
+                pledge chair for dates.
+              </p>
+            ) : (
+              <ul className="events-list">
+                {upcomingEvents.map((ev) => (
+                  <li key={ev.id} className="event-item">
+                    <div className="event-date-block">
+                      <span className="event-month">
+                        {new Date(ev.date).toLocaleDateString('en-US', { month: 'short' })}
+                      </span>
+                      <span className="event-day">
+                        {new Date(ev.date).getDate()}
+                      </span>
+                      <span className="event-time">
+                        {new Date(ev.date).toLocaleTimeString('en-US', {
+                          hour: 'numeric',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
+                    <div className="event-body">
+                      <div className="event-title-row">
+                        <h4 className="event-title">{ev.title}</h4>
+                        {ev.category && (
+                          <span className="event-category">{ev.category}</span>
+                        )}
+                      </div>
+                      {ev.location && (
+                        <p className="event-location">📍 {ev.location}</p>
+                      )}
+                      {ev.description && (
+                        <p className="event-description">{ev.description}</p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
+
         {/* Overdue & Upcoming Commitments */}
         <section className="home-section upcoming-section">
           <h3>Upcoming Commitments</h3>
@@ -371,6 +432,11 @@ function Home() {
               <div className="action-icon">💬</div>
               <h4>Feedback Center</h4>
               <p>View milestone and weekly feedback</p>
+            </Link>
+            <Link to="/resources" className="home-action-card">
+              <div className="action-icon">📚</div>
+              <h4>Resources</h4>
+              <p>Feedback links, career tools, and chapter info</p>
             </Link>
           </div>
         </section>

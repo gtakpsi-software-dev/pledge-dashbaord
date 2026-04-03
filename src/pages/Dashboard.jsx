@@ -90,6 +90,12 @@ function Dashboard() {
           <h1>Pledge Dashboard</h1>
         </div>
         <div className="nav-user">
+          <Link to="/home" className="dashboard-nav-link">
+            Home
+          </Link>
+          <Link to="/resources" className="dashboard-nav-link">
+            Resources
+          </Link>
           {user?.role === 'admin' && (
             <>
               <Link to="/admin/todos" className="btn-admin-link">

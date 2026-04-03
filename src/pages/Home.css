@@ -377,6 +377,119 @@
   text-decoration: underline;
 }
 
+/* Upcoming events */
+.events-card {
+  background: var(--white);
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.events-empty {
+  color: var(--text-light);
+  margin: 0;
+}
+
+.events-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-item {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.event-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.event-date-block {
+  flex-shrink: 0;
+  width: 4.5rem;
+  text-align: center;
+  padding: 0.5rem 0.35rem;
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  border-radius: 8px;
+  border: 1px solid #e0e7ff;
+}
+
+.event-month {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #5b21b6;
+  letter-spacing: 0.03em;
+}
+
+.event-day {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.1;
+}
+
+.event-time {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-top: 0.15rem;
+}
+
+.event-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.event-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.event-category {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.5rem;
+  background: #e0e7ff;
+  color: #3730a3;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.event-location {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin: 0.25rem 0 0;
+}
+
+.event-description {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin: 0.35rem 0 0;
+  line-height: 1.45;
+}
+
 /* Overdue */
 .overdue-header,
 .upcoming-header {
@@ -497,5 +610,14 @@
 
   .quick-actions-grid {
     grid-template-columns: 1fr;
+  }
+
+  .event-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .event-date-block {
+    align-self: flex-start;
   }
 }
