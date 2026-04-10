@@ -9,6 +9,9 @@ import Dashboard from './pages/Dashboard'
 import OneOnOneTracker from './pages/OneOnOneTracker'
 import AdminTodos from './pages/AdminTodos'
 import AdminFeedback from './pages/AdminFeedback'
+import AdminUsers from './pages/AdminUsers'
+import AdminAnalytics from './pages/AdminAnalytics'
+import BrotherDirectory from './pages/BrotherDirectory'
 import FeedbackCenter from './pages/FeedbackCenter'
 import Resources from './pages/Resources'
 import './App.css'
@@ -63,10 +66,34 @@ function App() {
               } 
             />
             <Route 
+              path="/admin/users" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <AdminUsers />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/analytics" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <AdminAnalytics />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
               path="/feedback-center" 
               element={
                 <ProtectedRoute>
                   <FeedbackCenter />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/directory" 
+              element={
+                <ProtectedRoute>
+                  <BrotherDirectory />
                 </ProtectedRoute>
               } 
             />

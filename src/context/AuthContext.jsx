@@ -62,6 +62,11 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       const response = await authAPI.signup(userData);
+      
+      if (response.data.pending) {
+        return { success: true, pending: true, message: response.data.message };
+      }
+
       const { token, user } = response.data;
       
       localStorage.setItem('token', token);

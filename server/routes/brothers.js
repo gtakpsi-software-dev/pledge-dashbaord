@@ -38,12 +38,16 @@ router.post('/',
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { name, type, position } = req.body;
+      const { name, type, position, industry, major, familyLine, linkedInUrl } = req.body;
 
       const brother = new Brother({
         name,
         type,
         position,
+        industry,
+        major,
+        familyLine,
+        linkedInUrl,
         addedBy: req.userId
       });
 
@@ -66,11 +70,11 @@ router.put('/:id',
   requireAdmin,
   async (req, res) => {
     try {
-      const { name, type, position, isActive } = req.body;
+      const { name, type, position, industry, major, familyLine, linkedInUrl, isActive } = req.body;
       
       const brother = await Brother.findByIdAndUpdate(
         req.params.id,
-        { name, type, position, isActive },
+        { name, type, position, industry, major, familyLine, linkedInUrl, isActive },
         { new: true, runValidators: true }
       );
 

@@ -39,7 +39,7 @@ function Home() {
       setTodos(todosRes.data.todos || []);
     } catch (err) {
       console.error('Error loading home data:', err);
-      setError('Could not load your progress. Make sure the backend server is running on port 5001.');
+      setError('Could not load your progress. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -141,6 +141,12 @@ function Home() {
           </Link>
           {user?.role === 'admin' && (
             <>
+              <Link to="/admin/analytics" className="btn-admin-link">
+                Analytics
+              </Link>
+              <Link to="/admin/users" className="btn-admin-link">
+                Manage Users
+              </Link>
               <Link to="/admin/todos" className="btn-admin-link">
                 Manage Todos
               </Link>
@@ -427,6 +433,11 @@ function Home() {
               <div className="action-icon">📅</div>
               <h4>Full Dashboard</h4>
               <p>Calendar, todos, and detailed progress</p>
+            </Link>
+            <Link to="/directory" className="home-action-card">
+              <div className="action-icon">👥</div>
+              <h4>Brother Directory</h4>
+              <p>Find brothers by major, industry, and family line</p>
             </Link>
             <Link to="/feedback-center" className="home-action-card">
               <div className="action-icon">💬</div>

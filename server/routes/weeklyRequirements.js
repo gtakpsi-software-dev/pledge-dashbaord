@@ -5,16 +5,26 @@ import { authenticate, requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Get all weekly requirements for a pledge class
+// Get all weekly requirements
+// - Pledges: always scoped to their own pledgeClass
+// - Admins: scoped to ?pledgeClass query param, or all if omitted
 router.get('/', authenticate, async (req, res) => {
   try {
-    const pledgeClass = req.user.pledgeClass;
-    
-    const requirements = await WeeklyRequirement.find({
-      pledgeClass,
-      isActive: true
-    }).sort({ weekStartDate: 1 });
+    let query = { isActive: true };
 
+    if (req.user.role === 'admin') {
+      if (req.query.pledgeClass) {
+        query.pledgeClass = req.query.pledgeClass;
+      }
+      // if no filter provided, admin gets all requirements across all pledge classes
+    } else {
+      if (!req.user.pledgeClass) {
+        return res.json({ requirements: [] });
+      }
+      query.pledgeClass = req.user.pledgeClass;
+    }
+
+    const requirements = await WeeklyRequirement.find(query).sort({ weekStartDate: 1 });
     res.json({ requirements });
   } catch (error) {
     console.error('Get weekly requirements error:', error);
@@ -26,7 +36,15 @@ router.get('/', authenticate, async (req, res) => {
 router.get('/current', authenticate, async (req, res) => {
   try {
     const now = new Date();
-    const pledgeClass = req.user.pledgeClass;
+
+    // Admins must supply ?pledgeClass=; pledges use their own
+    const pledgeClass = req.user.role === 'admin'
+      ? req.query.pledgeClass
+      : req.user.pledgeClass;
+
+    if (!pledgeClass) {
+      return res.json({ requirement: null });
+    }
 
     const currentRequirement = await WeeklyRequirement.findOne({
       pledgeClass,
@@ -58,12 +76,7 @@ router.post('/',
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const {
-        weekStartDate,
-        weekEndDate,
-        pledgeClass,
-        requirements
-      } = req.body;
+      const { weekStartDate, weekEndDate, pledgeClass, requirements } = req.body;
 
       const weeklyRequirement = new WeeklyRequirement({
         weekStartDate,
@@ -95,36 +108,29 @@ router.post('/',
 );
 
 // Update weekly requirement (admin only)
-router.put('/:id',
-  authenticate,
-  requireAdmin,
-  async (req, res) => {
-    try {
-      const { requirements, isActive } = req.body;
+router.put('/:id', authenticate, requireAdmin, async (req, res) => {
+  try {
+    const { requirements, isActive } = req.body;
 
-      const weeklyRequirement = await WeeklyRequirement.findByIdAndUpdate(
-        req.params.id,
-        {
-          requirements,
-          isActive
-        },
-        { new: true, runValidators: true }
-      );
+    const weeklyRequirement = await WeeklyRequirement.findByIdAndUpdate(
+      req.params.id,
+      { requirements, isActive },
+      { new: true, runValidators: true }
+    );
 
-      if (!weeklyRequirement) {
-        return res.status(404).json({ message: 'Weekly requirement not found' });
-      }
-
-      res.json({
-        message: 'Weekly requirement updated successfully',
-        requirement: weeklyRequirement
-      });
-    } catch (error) {
-      console.error('Update weekly requirement error:', error);
-      res.status(500).json({ message: 'Server error' });
+    if (!weeklyRequirement) {
+      return res.status(404).json({ message: 'Weekly requirement not found' });
     }
+
+    res.json({
+      message: 'Weekly requirement updated successfully',
+      requirement: weeklyRequirement
+    });
+  } catch (error) {
+    console.error('Update weekly requirement error:', error);
+    res.status(500).json({ message: 'Server error' });
   }
-);
+});
 
 // Delete weekly requirement (admin only)
 router.delete('/:id', authenticate, requireAdmin, async (req, res) => {
@@ -143,4 +149,3 @@ router.delete('/:id', authenticate, requireAdmin, async (req, res) => {
 });
 
 export default router;
-

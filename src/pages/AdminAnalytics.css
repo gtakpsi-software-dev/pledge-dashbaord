@@ -1,0 +1,94 @@
+.admin-analytics {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.analytics-header {
+  margin-bottom: 2rem;
+}
+
+.analytics-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #1a365d;
+}
+
+.analytics-header p {
+  color: #666;
+}
+
+.analytics-controls {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.class-select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.analytics-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+.analytics-table th {
+  background-color: #f7fafc;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #4a5568;
+  border-bottom: 2px solid #edf2f7;
+}
+
+.analytics-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #edf2f7;
+  color: #2d3748;
+}
+
+/* Status colors */
+.status-good {
+  color: #2f855a;
+  font-weight: 600;
+  background-color: #f0fff4;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.status-warning {
+  color: #c05621;
+  font-weight: 600;
+  background-color: #fffaf0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.status-danger {
+  color: #c53030;
+  font-weight: 600;
+  background-color: #fff5f5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #718096;
+}

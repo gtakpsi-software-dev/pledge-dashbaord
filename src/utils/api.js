@@ -41,7 +41,10 @@ export const authAPI = {
   login: (email, password) => api.post('/auth/login', { email, password }),
   signup: (userData) => api.post('/auth/signup', userData),
   getCurrentUser: () => api.get('/auth/me'),
-  getUsers: (params) => api.get('/auth/users', { params })
+  getUsers: (params) => api.get('/auth/users', { params }),
+  getPendingUsers: () => api.get('/auth/users/pending'),
+  activateUser: (userId) => api.put(`/auth/users/${userId}/activate`),
+  deactivateUser: (userId) => api.put(`/auth/users/${userId}/deactivate`)
 };
 
 // Brother APIs
@@ -98,6 +101,11 @@ export const feedbackAPI = {
   create: (feedbackData) => api.post('/feedback', feedbackData),
   update: (id, feedbackData) => api.put(`/feedback/${id}`, feedbackData),
   delete: (id) => api.delete(`/feedback/${id}`)
+};
+
+// Analytics APIs
+export const analyticsAPI = {
+  getRoster: (params) => api.get('/analytics/roster', { params })
 };
 
 export default api;

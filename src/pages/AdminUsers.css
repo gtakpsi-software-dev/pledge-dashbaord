@@ -1,0 +1,97 @@
+.admin-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-header {
+  margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #1a365d;
+}
+
+.admin-header p {
+  color: #666;
+}
+
+.admin-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.admin-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #2d3748;
+  border-bottom: 2px solid #edf2f7;
+  padding-bottom: 0.5rem;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-table th {
+  padding: 1rem;
+  background-color: #f7fafc;
+  color: #4a5568;
+  font-weight: 600;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.admin-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #edf2f7;
+  color: #4a5568;
+}
+
+.no-data {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+  font-style: italic;
+  background-color: #f7fafc;
+  border-radius: 6px;
+}
+
+.btn-primary.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background-color: #48bb78;
+}
+
+.btn-primary.btn-sm:hover {
+  background-color: #38a169;
+}
+
+.btn-danger {
+  background-color: #e53e3e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-danger:hover {
+  background-color: #c53030;
+}
+
+.btn-danger.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}

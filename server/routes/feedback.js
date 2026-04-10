@@ -52,34 +52,48 @@ router.get('/pledges', authenticate, requireAdmin, async (req, res) => {
   }
 });
 
-// Get all feedback for all pledges (admin only)
+// Get all feedback for all pledges (admin only) — supports ?page=1&limit=50
 router.get('/all', authenticate, requireAdmin, async (req, res) => {
   try {
-    const { pledgeId, milestone, pledgeClass } = req.query;
-    
+    const { pledgeId, milestone, pledgeClass, page = 1, limit = 50 } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
     let query = {};
-    
+
     if (pledgeId) {
       query.pledgeId = pledgeId;
     } else if (pledgeClass) {
-      const pledges = await User.find({ 
-        role: 'pledge', 
-        pledgeClass, 
-        isActive: true 
+      const pledges = await User.find({
+        role: 'pledge',
+        pledgeClass,
+        isActive: true
       }).select('_id');
       query.pledgeId = { $in: pledges.map(p => p._id) };
     }
-    
+
     if (milestone) {
       query.milestone = milestone;
     }
 
-    const feedback = await Feedback.find(query)
-      .populate('pledgeId', 'firstName lastName email pledgeClass')
-      .populate('givenBy', 'firstName lastName')
-      .sort({ createdAt: -1 });
+    const [feedback, total] = await Promise.all([
+      Feedback.find(query)
+        .populate('pledgeId', 'firstName lastName email pledgeClass')
+        .populate('givenBy', 'firstName lastName')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit)),
+      Feedback.countDocuments(query)
+    ]);
 
-    res.json({ feedback });
+    res.json({
+      feedback,
+      pagination: {
+        total,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        totalPages: Math.ceil(total / parseInt(limit))
+      }
+    });
   } catch (error) {
     console.error('Get all feedback error:', error);
     res.status(500).json({ message: 'Server error' });

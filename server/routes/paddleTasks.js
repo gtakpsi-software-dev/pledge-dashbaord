@@ -22,7 +22,10 @@ router.get('/', authenticate, async (req, res) => {
 router.get('/week/:date', authenticate, async (req, res) => {
   try {
     const weekDate = new Date(req.params.date);
-    
+    if (isNaN(weekDate.getTime())) {
+      return res.status(400).json({ message: 'Invalid date format. Use ISO 8601 (e.g. 2025-10-09).' });
+    }
+
     let paddleTask = await PaddleTask.findOne({
       pledgeId: req.userId,
       weekDate

@@ -15,6 +15,7 @@ function Signup() {
     pledgeClass: ''
   })
   const [error, setError] = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -53,7 +54,12 @@ function Signup() {
     setLoading(false)
 
     if (result.success) {
-      navigate('/home')
+      if (result.pending) {
+        setSuccessMsg(result.message || 'Account created! Please wait for an admin to approve your account.')
+        setError('')
+      } else {
+        navigate('/home')
+      }
     } else {
       setError(result.error || 'Signup failed. Please try again.')
     }
@@ -77,8 +83,20 @@ function Signup() {
           </div>
         )}
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <div className="form-row">
+        {successMsg ? (
+          <div className="success-message" style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
+            <h3>Account Created</h3>
+            <p style={{ marginTop: '1rem', color: '#444' }}>{successMsg}</p>
+            <p style={{ marginTop: '2rem' }}>
+              <Link to="/login" className="btn-primary" style={{ display: 'inline-block', textDecoration: 'none' }}>
+                Return to Login
+              </Link>
+            </p>
+          </div>
+        ) : (
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <div className="form-row">
             <div className="form-group">
               <label htmlFor="firstName">First Name</label>
               <input
@@ -165,14 +183,17 @@ function Signup() {
             </label>
           </div>
 
-          <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'Creating Account...' : 'Create Account'}
-          </button>
-        </form>
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? 'Creating Account...' : 'Create Account'}
+            </button>
+          </form>
+        )}
 
-        <div className="auth-footer">
-          <p>Already have an account? <Link to="/login" className="auth-link">Sign In</Link></p>
-        </div>
+        {!successMsg && (
+          <div className="auth-footer">
+            <p>Already have an account? <Link to="/login" className="auth-link">Sign In</Link></p>
+          </div>
+        )}
       </div>
 
       <div className="auth-decoration">
