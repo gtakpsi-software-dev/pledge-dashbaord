@@ -113,11 +113,6 @@ function AdminFeedback() {
 
   return (
     <div className="admin-feedback-container">
-      <nav className="admin-nav">
-        <Link to="/dashboard" className="back-link">← Back to Dashboard</Link>
-        <h1>Manage Feedback</h1>
-      </nav>
-
       <div className="admin-feedback-main">
         <div className="admin-header">
           <h2>All Pledge Feedback</h2>

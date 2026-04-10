@@ -72,11 +72,6 @@ function FeedbackCenter() {
 
   return (
     <div className="feedback-center-container">
-      <nav className="feedback-nav">
-        <Link to="/dashboard" className="back-link">← Back to Dashboard</Link>
-        <h1>Feedback Center</h1>
-      </nav>
-
       <main className="feedback-main">
         <div className="feedback-header">
           <h2>Your Milestone Feedback</h2>

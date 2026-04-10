@@ -127,42 +127,6 @@ function Home() {
 
   return (
     <div className="home-container">
-      <nav className="home-nav">
-        <div className="nav-brand">
-          <div className="greek-letters-small">ΑΚΨ</div>
-          <h1>Pledge Dashboard</h1>
-        </div>
-        <div className="nav-user">
-          <Link to="/resources" className="nav-link">
-            Resources
-          </Link>
-          <Link to="/dashboard" className="nav-link">
-            Full Dashboard
-          </Link>
-          {user?.role === 'admin' && (
-            <>
-              <Link to="/admin/analytics" className="btn-admin-link">
-                Analytics
-              </Link>
-              <Link to="/admin/users" className="btn-admin-link">
-                Manage Users
-              </Link>
-              <Link to="/admin/todos" className="btn-admin-link">
-                Manage Todos
-              </Link>
-              <Link to="/admin/feedback" className="btn-admin-link">
-                Manage Feedback
-              </Link>
-            </>
-          )}
-          <span className="user-name">{user?.fullName}</span>
-          <span className="user-class">{user?.pledgeClass || user?.role}</span>
-          <button onClick={logout} className="btn-logout">
-            Logout
-          </button>
-        </div>
-      </nav>
-
       <main className="home-main">
         {/* Hero / Welcome */}
         <section className="home-hero">
@@ -218,34 +182,34 @@ function Home() {
             <div className="progress-stats">
               <span className="progress-percent">{progressPercent}%</span>
               <span className="progress-detail">
-                {totalCompleted} of {totalRequired} total 1:1s completed this
-                semester
+                {totalRequired > 0 
+                  ? `${totalCompleted} of ${totalRequired} total 1:1s completed this semester`
+                  : `${totalCompleted} 1:1s completed this semester (requirements pending)`}
               </span>
             </div>
             <div className="progress-breakdown">
               <div className="breakdown-item">
                 <span className="breakdown-label">Networking</span>
                 <span className="breakdown-value">
-                  {stats?.networking.completed ?? 0} / {semesterTotals.networking}
+                  {semesterTotals.networking > 0 ? `${stats?.networking.completed ?? 0} / ${semesterTotals.networking}` : stats?.networking.completed ?? 0}
                 </span>
               </div>
               <div className="breakdown-item">
                 <span className="breakdown-label">Brotherhood</span>
                 <span className="breakdown-value">
-                  {stats?.brotherhood.completed ?? 0} /{' '}
-                  {semesterTotals.brotherhood}
+                  {semesterTotals.brotherhood > 0 ? `${stats?.brotherhood.completed ?? 0} / ${semesterTotals.brotherhood}` : stats?.brotherhood.completed ?? 0}
                 </span>
               </div>
               <div className="breakdown-item">
                 <span className="breakdown-label">Alumni</span>
                 <span className="breakdown-value">
-                  {stats?.alumni.completed ?? 0} / {semesterTotals.alumni}
+                  {semesterTotals.alumni > 0 ? `${stats?.alumni.completed ?? 0} / ${semesterTotals.alumni}` : stats?.alumni.completed ?? 0}
                 </span>
               </div>
               <div className="breakdown-item">
                 <span className="breakdown-label">Industry</span>
                 <span className="breakdown-value">
-                  {stats?.industry.completed ?? 0} / {semesterTotals.industry}
+                  {semesterTotals.industry > 0 ? `${stats?.industry.completed ?? 0} / ${semesterTotals.industry}` : stats?.industry.completed ?? 0}
                 </span>
               </div>
             </div>

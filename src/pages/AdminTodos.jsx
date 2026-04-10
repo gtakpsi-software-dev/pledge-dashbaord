@@ -10,7 +10,12 @@ function AdminTodos() {
   const [pledges, setPledges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [selectAllPledges, setSelectAllPledges] = useState(false);
+  
+  const [assignMode, setAssignMode] = useState('single'); // 'single', 'class', 'all'
+  const [selectedClass, setSelectedClass] = useState('');
+  
+  const [expandedClasses, setExpandedClasses] = useState({});
+
   const [formData, setFormData] = useState({
     pledgeId: '',
     title: '',
@@ -24,6 +29,16 @@ function AdminTodos() {
     loadData();
   }, []);
 
+  const parseTerm = (str) => {
+    if (!str) return 0;
+    const parts = str.split(' ');
+    if (parts.length < 2) return 0;
+    const term = parts[0].toLowerCase();
+    const year = parseInt(parts[1], 10);
+    const termWeight = term === 'fall' ? 2 : 1; 
+    return year * 10 + termWeight;
+  };
+
   const loadData = async () => {
     try {
       setLoading(true);
@@ -33,7 +48,17 @@ function AdminTodos() {
       ]);
       
       setTodos(todosRes.data.todos);
-      setPledges(usersRes.data.users || []);
+      const fetchedPledges = usersRes.data.users || [];
+      setPledges(fetchedPledges);
+
+      // Auto-expand the newest pledge class
+      const uniqueClasses = [...new Set(fetchedPledges.map(p => p.pledgeClass).filter(Boolean))]
+        .sort((a, b) => parseTerm(b) - parseTerm(a));
+      
+      if (uniqueClasses.length > 0) {
+        setExpandedClasses({ [uniqueClasses[0]]: true });
+      }
+
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -44,8 +69,7 @@ function AdminTodos() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (selectAllPledges) {
-        // Create todo for all pledges
+      if (assignMode === 'all') {
         const pledgeIds = pledges.map(p => p._id);
         await todoAPI.createBulk({
           pledgeIds,
@@ -55,13 +79,28 @@ function AdminTodos() {
           priority: formData.priority,
           category: formData.category
         });
+      } else if (assignMode === 'class') {
+        const classPledges = pledges.filter(p => p.pledgeClass === selectedClass);
+        const pledgeIds = classPledges.map(p => p._id);
+        if (pledgeIds.length === 0) {
+          alert('No pledges found in this class.');
+          return;
+        }
+        await todoAPI.createBulk({
+          pledgeIds,
+          title: formData.title,
+          description: formData.description,
+          dueDate: formData.dueDate,
+          priority: formData.priority,
+          category: formData.category
+        });
       } else {
-        // Create todo for single pledge
         await todoAPI.create(formData);
       }
       
       setShowAddModal(false);
-      setSelectAllPledges(false);
+      setAssignMode('single');
+      setSelectedClass('');
       setFormData({
         pledgeId: '',
         title: '',
@@ -88,17 +127,27 @@ function AdminTodos() {
     }
   };
 
+  const toggleClass = (pc) => {
+    setExpandedClasses(prev => ({
+      ...prev,
+      [pc]: !prev[pc]
+    }));
+  };
+
   if (loading) {
     return <div className="admin-loading">Loading...</div>;
   }
 
+  const uniqueClasses = [...new Set(pledges.map(p => p.pledgeClass).filter(Boolean))]
+    .sort((a, b) => parseTerm(b) - parseTerm(a));
+
+  const pledgesByClass = uniqueClasses.reduce((acc, pc) => {
+    acc[pc] = pledges.filter(p => p.pledgeClass === pc);
+    return acc;
+  }, {});
+
   return (
     <div className="admin-todos-container">
-      <nav className="admin-nav">
-        <Link to="/dashboard" className="back-link">← Back to Dashboard</Link>
-        <h1>Manage Todos</h1>
-      </nav>
-
       <div className="admin-todos-main">
         <div className="admin-header">
           <h2>All Pledge Todos</h2>
@@ -107,56 +156,71 @@ function AdminTodos() {
           </button>
         </div>
 
-        <div className="todos-grid">
-          {pledges.map(pledge => {
-            const pledgeTodos = todos.filter(t => t.pledgeId?._id === pledge._id);
-            const completedCount = pledgeTodos.filter(t => t.completed).length;
-            
-            return (
-              <div key={pledge._id} className="pledge-todos-card">
-                <div className="pledge-header">
-                  <h3>{pledge.firstName} {pledge.lastName}</h3>
-                  <span className="pledge-stats">
-                    {completedCount} / {pledgeTodos.length} completed
-                  </span>
-                </div>
-                
-                <div className="pledge-todos-list">
-                  {pledgeTodos.map(todo => (
-                    <div key={todo._id} className={`admin-todo-item ${todo.completed ? 'completed' : ''}`}>
-                      <div className="todo-info">
-                        <h4>{todo.title}</h4>
-                        {todo.description && <p>{todo.description}</p>}
-                        <div className="todo-badges">
-                          <span className={`priority-badge ${todo.priority}`}>
-                            {todo.priority}
-                          </span>
-                          <span className="category-badge">{todo.category}</span>
-                          {todo.dueDate && (
-                            <span className="due-badge">
-                              Due: {new Date(todo.dueDate).toLocaleDateString()}
-                            </span>
-                          )}
-                          {todo.completed && <span className="completed-badge">✓ Completed</span>}
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => handleDelete(todo._id)} 
-                        className="btn-delete-small"
-                        title="Delete todo"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                  {pledgeTodos.length === 0 && (
-                    <p className="no-todos-text">No todos assigned</p>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        {uniqueClasses.map((pc) => {
+          const isExpanded = !!expandedClasses[pc];
+
+          return (
+            <div key={pc} className="pledge-class-group">
+               <div className="pledge-class-header" onClick={() => toggleClass(pc)}>
+                 <h3>{pc} ({pledgesByClass[pc].length} pledges)</h3>
+                 <span className="expand-icon">{isExpanded ? '▼' : '►'}</span>
+               </div>
+               
+               {isExpanded && (
+                 <div className="todos-grid">
+                   {pledgesByClass[pc].map(pledge => {
+                     const pledgeTodos = todos.filter(t => t.pledgeId?._id === pledge._id);
+                     const completedCount = pledgeTodos.filter(t => t.completed).length;
+                     
+                     return (
+                       <div key={pledge._id} className="pledge-todos-card">
+                         <div className="pledge-header">
+                           <h3>{pledge.firstName} {pledge.lastName}</h3>
+                           <span className="pledge-stats">
+                             {completedCount} / {pledgeTodos.length} completed
+                           </span>
+                         </div>
+                         
+                         <div className="pledge-todos-list">
+                           {pledgeTodos.map(todo => (
+                             <div key={todo._id} className={`admin-todo-item ${todo.completed ? 'completed' : ''}`}>
+                               <div className="todo-info">
+                                 <h4>{todo.title}</h4>
+                                 {todo.description && <p>{todo.description}</p>}
+                                 <div className="todo-badges">
+                                   <span className={`priority-badge ${todo.priority}`}>
+                                     {todo.priority}
+                                   </span>
+                                   <span className="category-badge">{todo.category}</span>
+                                   {todo.dueDate && (
+                                     <span className="due-badge">
+                                       Due: {new Date(todo.dueDate).toLocaleDateString()}
+                                     </span>
+                                   )}
+                                   {todo.completed && <span className="completed-badge">✓ Completed</span>}
+                                 </div>
+                               </div>
+                               <button 
+                                 onClick={() => handleDelete(todo._id)} 
+                                 className="btn-delete-small"
+                                 title="Delete todo"
+                               >
+                                 ×
+                               </button>
+                             </div>
+                           ))}
+                           {pledgeTodos.length === 0 && (
+                             <p className="no-todos-text">No todos assigned</p>
+                           )}
+                         </div>
+                       </div>
+                     );
+                   })}
+                 </div>
+               )}
+            </div>
+          )
+        })}
 
         {pledges.length === 0 && (
           <div className="no-data">
@@ -171,22 +235,40 @@ function AdminTodos() {
             <h3>Add New Todo</h3>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={selectAllPledges}
-                    onChange={(e) => {
-                      setSelectAllPledges(e.target.checked);
-                      if (e.target.checked) {
-                        setFormData({...formData, pledgeId: ''});
-                      }
-                    }}
-                  />
-                  <span>Select all pledges ({pledges.length})</span>
-                </label>
+                <label>Assign To</label>
+                <select 
+                  value={assignMode} 
+                  onChange={(e) => {
+                    setAssignMode(e.target.value);
+                    if (e.target.value !== 'single') {
+                      setFormData({...formData, pledgeId: ''});
+                    }
+                  }}
+                  required
+                >
+                  <option value="single">Single Pledge</option>
+                  <option value="class">Entire Pledge Class</option>
+                  <option value="all">All Active Pledges</option>
+                </select>
               </div>
 
-              {!selectAllPledges && (
+              {assignMode === 'class' && (
+                <div className="form-group">
+                  <label>Pledge Class</label>
+                  <select
+                    value={selectedClass}
+                    onChange={(e) => setSelectedClass(e.target.value)}
+                    required
+                  >
+                    <option value="">Select a pledge class...</option>
+                    {uniqueClasses.map(pc => (
+                      <option key={pc} value={pc}>{pc}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {assignMode === 'single' && (
                 <div className="form-group">
                   <label>Pledge</label>
                   <select
@@ -279,4 +361,3 @@ function AdminTodos() {
 }
 
 export default AdminTodos;
-

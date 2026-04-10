@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { brotherAPI } from '../utils/api';
 import './BrotherDirectory.css';
 
 function BrotherDirectory() {
+  const { user } = useAuth();
   const [brothers, setBrothers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -149,7 +151,9 @@ function BrotherDirectory() {
 
               <div className="brother-actions">
                 <a 
-                  href="mailto:"
+                  href={`https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(brother.name)}&subject=${encodeURIComponent('AKPsi 1:1 Request - ' + (user?.fullName || 'Pledge'))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="btn-1on1"
                 >
                   Request 1:1

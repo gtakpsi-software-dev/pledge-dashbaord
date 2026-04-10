@@ -247,3 +247,36 @@ textarea {
   font-weight: 500;
   color: var(--text-dark);
 }
+
+.pledge-class-group {
+  margin-bottom: 2rem;
+}
+
+.pledge-class-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--white);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 1rem;
+  border-left: 4px solid #667eea;
+  transition: all 0.2s ease;
+}
+
+.pledge-class-header:hover {
+  background: #f7fafc;
+}
+
+.pledge-class-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-dark);
+}
+
+.expand-icon {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}

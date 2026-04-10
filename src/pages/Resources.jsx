@@ -36,39 +36,6 @@ function Resources() {
 
   return (
     <div className="resources-page">
-      <nav className="resources-nav">
-        <Link to="/home" className="resources-nav-brand">
-          <div className="greek-letters-small">ΑΚΨ</div>
-          <h1>Pledge Dashboard</h1>
-        </Link>
-        <div className="resources-nav-links">
-          <Link to="/home" className="nav-link">
-            Home
-          </Link>
-          <Link to="/resources" className="nav-link nav-link-active">
-            Resources
-          </Link>
-          <Link to="/dashboard" className="nav-link">
-            Full Dashboard
-          </Link>
-          {user?.role === 'admin' && (
-            <>
-              <Link to="/admin/todos" className="btn-admin-link">
-                Manage Todos
-              </Link>
-              <Link to="/admin/feedback" className="btn-admin-link">
-                Manage Feedback
-              </Link>
-            </>
-          )}
-          <span className="user-name">{user?.fullName}</span>
-          <span className="user-class">{user?.pledgeClass || user?.role}</span>
-          <button type="button" onClick={logout} className="btn-logout">
-            Logout
-          </button>
-        </div>
-      </nav>
-
       <main className="resources-main">
         <header className="resources-hero">
           <h2>Resources</h2>

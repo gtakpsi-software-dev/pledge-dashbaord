@@ -1,0 +1,164 @@
+.app-navbar {
+  background: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.greek-letters-small {
+  background: #1a365d;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-family: serif;
+  font-size: 1.1rem;
+}
+
+.nav-brand h1 {
+  font-size: 1.25rem;
+  color: #1a365d;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  color: #4a5568;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: #3182ce;
+}
+
+.admin-dropdown-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-left: 2px dashed #e2e8f0;
+  border-right: 2px dashed #e2e8f0;
+  padding: 0 1rem;
+  cursor: pointer;
+}
+
+.admin-dropdown-trigger {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #c53030;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+
+.admin-dropdown-container:hover .admin-dropdown-trigger {
+  color: #9b2c2c;
+}
+
+.admin-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  min-width: 160px;
+  flex-direction: column;
+  z-index: 1000;
+  margin-top: 0.5rem;
+}
+
+.admin-dropdown-container:hover .admin-dropdown-menu {
+  display: flex;
+}
+
+.admin-dropdown-item {
+  padding: 0.75rem 1rem;
+  color: #2d3748;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f7fafc;
+  transition: background 0.15s;
+}
+
+.admin-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.admin-dropdown-item:hover {
+  background: #fff5f5;
+  color: #c53030;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 1rem;
+  border-left: 1px solid #e2e8f0;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.user-class {
+  background: #edf2f7;
+  color: #4a5568;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.btn-logout {
+  background: none;
+  border: 1px solid #e53e3e;
+  color: #e53e3e;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  background: #fff5f5;
+}
+
+@media (max-width: 768px) {
+  .app-navbar {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .nav-links {
+    justify-content: center;
+  }
+}

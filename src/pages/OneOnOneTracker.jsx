@@ -108,11 +108,6 @@ function OneOnOneTracker() {
 
   return (
     <div className="tracker-container">
-      <nav className="tracker-nav">
-        <Link to="/dashboard" className="back-link">← Back to Dashboard</Link>
-        <h1>1:1 Tracker</h1>
-      </nav>
-
       <div className="tracker-main">
         <div className="tracker-tabs">
           <button 

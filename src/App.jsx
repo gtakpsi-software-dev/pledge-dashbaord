@@ -11,6 +11,7 @@ import AdminTodos from './pages/AdminTodos'
 import AdminFeedback from './pages/AdminFeedback'
 import AdminUsers from './pages/AdminUsers'
 import AdminAnalytics from './pages/AdminAnalytics'
+import AdminRequirements from './pages/AdminRequirements'
 import BrotherDirectory from './pages/BrotherDirectory'
 import FeedbackCenter from './pages/FeedbackCenter'
 import Resources from './pages/Resources'
@@ -78,6 +79,14 @@ function App() {
               element={
                 <ProtectedRoute adminOnly={true}>
                   <AdminAnalytics />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/requirements" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <AdminRequirements />
                 </ProtectedRoute>
               } 
             />

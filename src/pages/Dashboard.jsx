@@ -84,34 +84,6 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <nav className="dashboard-nav">
-        <div className="nav-brand">
-          <div className="greek-letters-small">ΑΚΨ</div>
-          <h1>Pledge Dashboard</h1>
-        </div>
-        <div className="nav-user">
-          <Link to="/home" className="dashboard-nav-link">
-            Home
-          </Link>
-          <Link to="/resources" className="dashboard-nav-link">
-            Resources
-          </Link>
-          {user?.role === 'admin' && (
-            <>
-              <Link to="/admin/todos" className="btn-admin-link">
-                Manage Todos
-              </Link>
-              <Link to="/admin/feedback" className="btn-admin-link">
-                Manage Feedback
-              </Link>
-            </>
-          )}
-          <span className="user-name">{user?.fullName}</span>
-          <span className="user-class">{user?.pledgeClass || user?.role}</span>
-          <button onClick={logout} className="btn-logout">Logout</button>
-        </div>
-      </nav>
-
       <main className="dashboard-main">
         <div className="welcome-section">
           <h2>Welcome back, {user?.firstName}!</h2>
