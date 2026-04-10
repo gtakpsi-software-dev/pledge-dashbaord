@@ -90,6 +90,16 @@
   margin-top: 0.5rem;
 }
 
+.admin-dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -0.5rem;
+  left: 0;
+  right: 0;
+  height: 0.5rem;
+  background: transparent;
+}
+
 .admin-dropdown-container:hover .admin-dropdown-menu {
   display: flex;
 }
